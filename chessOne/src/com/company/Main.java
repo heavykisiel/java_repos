@@ -2,15 +2,15 @@ package com.company;
 import javax.swing.*;
 public class Main {
 
-    static int kingPositionC,getKingPositionL;
+    static int kingPositionC,kingPositionL;
     static String chessBoard[][]={
         //x   0   1   2   3   4   5   6   7   //  y
             {"r","k","b","q","a","b","k","r"}, // 0
             {"p","p","p","p","p","p","p","p"}, // 1
-            {" "," "," "," "," "," ","P"," "}, // 2
-            {" "," "," ","K"," "," "," "," "}, // 3
+            {" "," "," "," "," "," "," "," "}, // 2
+            {" "," "," "," ","q"," "," "," "}, // 3
             {" "," "," "," "," "," "," "," "}, // 4
-            {" "," "," "," "," "," "," "," "}, // 5
+            {" "," ","A"," ","a"," "," "," "}, // 5
             {"P","P","P","P","P","P","P","P"}, // 6
             {"R","K","B","Q","A","B","K","R"}};// 7
     /*
@@ -24,14 +24,19 @@ public class Main {
 
 
     public static void main(String[] args) {
-
-        JFrame f = new JFrame("Chess");
+        while(!"A".equals(chessBoard[kingPositionC/8][kingPositionC%8])){
+            kingPositionC++;
+        }
+        while(!"a".equals(chessBoard[kingPositionL/8][kingPositionL%8])){
+            kingPositionL++;
+        }
+     /* JFrame f = new JFrame("Chess");
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         UserI ui = new UserI();
         f.add(ui);
         f.setSize(500,500);
         f.setVisible(true);
-        possibleMoves();
+     */ possibleMoves();
         System.out.println(possibleMoves());
 
     }
@@ -41,16 +46,16 @@ public class Main {
             switch(chessBoard[i/8][i%8]){
                 case "p": list+=possibleP(i);
                     break;
-              //  case "R": list+=possibleR(i);
-                //    break;
+                case "R": list+=possibleR(i);
+                    break;
                 case "K": list+=possibleK(i);
                     break;
-               // case "B": list+=possibleB(i);
-                //    break;
-                //case "Q": list+=possibleQ(i);
-                //    break;
-               // case "A": list+=possibleA(i);
-               //    break;
+                case "B": list+=possibleB(i);
+                    break;
+                case "Q": list+=possibleQ(i);
+                    break;
+                case "A": list+=possibleA(i);
+                    break;
             }
         }
         return list;
@@ -137,10 +142,9 @@ public class Main {
                     if (Character.isLowerCase(chessBoard[r+j][c+k*2].charAt(0)) ||" ".equals(chessBoard[r + j][c + k*2])) {
                         oldPiece=chessBoard[r+j][c+k*2];
                         chessBoard[r][c]=" ";
-                        chessBoard[r+j][c+k*2]="K";
+
                         if (kingSafe()) {
                             list = list + r + c + (r+j) + (c+k*2) + oldPiece;
-
                         }
                         chessBoard[r][c]="K";
                         chessBoard[r+j][c+k*2]=oldPiece;
@@ -149,14 +153,13 @@ public class Main {
                     }catch(Exception e){
 
                     }
-                /*  try {
+                  try {
                     if (Character.isLowerCase(chessBoard[r+j*2][c+k].charAt(0)) ||" ".equals(chessBoard[r + j*2][c + k])) {
-                        oldPiece=chessBoard[r+j][c+k*2];
+                        oldPiece=chessBoard[r+j*2][c+k];
                         chessBoard[r][c]=" ";
-                        chessBoard[r+j][c+k*2]="K";
-                        if (kingSafe()) {
-                            list = list + r + c + (r+j) + (c+k*2) + oldPiece;
 
+                        if (kingSafe()) {
+                            list = list + r + c + (r+j*2) + (c+k) + oldPiece;
                         }
                         chessBoard[r][c]="K";
                         chessBoard[r+j*2][c+k]=oldPiece;
@@ -166,7 +169,7 @@ public class Main {
 
                 }
 
-                */
+
 
             }
         }
@@ -293,7 +296,108 @@ public class Main {
         //add castling
         return list;
     }
-    public static boolean kingSafe(){
+    public static boolean kingSafe() {
+        //bishop / queen
+
+        int temp = 1;
+
+
+        for (int i = -1; i <= 1; i += 2) {
+            for (int j = -1; j <= 1; j += 2) {
+                try {
+                    while (" ".equals(chessBoard[kingPositionC / 8 + temp * i][kingPositionC % 8 + temp * j])) {
+                        temp++;
+                    }
+                    if ("b".equals(chessBoard[kingPositionC / 8 + temp * i][kingPositionC % 8 + temp * j]) ||
+                            "q".equals(chessBoard[kingPositionC / 8 + temp * i][kingPositionC % 8 + temp * j])) {
+                        return false;
+                    }
+                } catch (Exception e) {
+
+                }
+                temp = 1;
+            }
+        }
+        //rook / queen
+
+        for (int i = -1; i <= 1; i += 2) {
+            try {
+                while (" ".equals(chessBoard[kingPositionC / 8][kingPositionC % 8 + temp * i])) {
+                    temp++;
+                }
+                if ("r".equals(chessBoard[kingPositionC / 8][kingPositionC % 8 + temp * i]) ||
+                        "q".equals(chessBoard[kingPositionC / 8][kingPositionC % 8 + temp * i])) {
+                    return false;
+                }
+            } catch (Exception e) {
+
+            }
+
+            try {
+                while (" ".equals(chessBoard[kingPositionC / 8][kingPositionC % 8])) {
+                    temp++;
+                }
+                if ("r".equals(chessBoard[kingPositionC / 8][kingPositionC % 8]) ||
+                        "q".equals(chessBoard[kingPositionC / 8][kingPositionC % 8])) {
+                    return false;
+                }
+            } catch (Exception e) {
+
+            }
+            temp = 1;
+        }
+        for (int i = -1; i <= 1; i += 2) {
+            for (int j = -1; j <= 1; j += 2) {
+                try {
+                    if ("k".equals(chessBoard[kingPositionC / 8+i][kingPositionC % 8+j*2])) {
+                        return false;
+                    }
+                } catch (Exception e) {
+
+                }
+                try {
+                    if ("k".equals(chessBoard[kingPositionC / 8+i*2][kingPositionC % 8+j])) {
+                        return false;
+                    }
+                } catch (Exception e) {
+
+                }
+            }
+        }
+        //pawn
+        if(kingPositionC>=16){
+        }
+        try {
+            if ("p".equals(chessBoard[kingPositionC / 8-1][kingPositionC %8 -1])) {
+                return false;
+            }
+        } catch (Exception e) {
+
+        }
+        try {
+            if ("p".equals(chessBoard[kingPositionC / 8-1][kingPositionC %8 +1])) {
+                return false;
+            }
+        } catch (Exception e) {
+
+        }
+        //king
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if(i!=0 || j!=0){
+                    try {
+                        if ("a".equals(chessBoard[kingPositionC / 8+i][kingPositionC % 8+j])) {
+                            return false;
+                        }
+                    } catch (Exception e) {
+
+                    }
+                }
+
+
+            }
+        }
+
         return true;
     }
 }
