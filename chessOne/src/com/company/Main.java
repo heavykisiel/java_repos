@@ -1,5 +1,7 @@
 package com.company;
 import javax.swing.*;
+import java.util.Arrays;
+
 public class Main {
 
     static int kingPositionC,kingPositionL;
@@ -10,7 +12,7 @@ public class Main {
             {" "," "," "," "," "," "," "," "}, // 2
             {" "," "," "," "," "," "," "," "}, // 3
             {" "," "," "," "," "," "," "," "}, // 4
-            {" "," "," "," ","q"," "," "," "}, // 5
+            {" "," "," "," "," "," "," "," "}, // 5
             {"P","P","P","P","P","P","P","P"}, // 6
             {"R","K","B","Q","A","B","K","R"}};// 7
     /*
@@ -36,8 +38,37 @@ public class Main {
         f.add(ui);
         f.setSize(500,500);
         f.setVisible(true);
-     */ possibleMoves();
+     */ //possibleMoves();
+
+
+        makeMove("7657 ");
+        for(int i=0;i<8;i++){
+            System.out.println(Arrays.toString(chessBoard[i]));
+        }
+        makeMove("7776 ");
         System.out.println(possibleMoves());
+
+        System.out.println(possibleMoves());
+        for(int i=0;i<8;i++){
+            System.out.println(Arrays.toString(chessBoard[i]));
+        }
+
+    }
+    public static void makeMove(String move){
+        if(move.charAt(4)!='P'){
+            //x1,y1,x2,y2,capturedPiece
+            chessBoard[Character.getNumericValue(move.charAt(2))][Character.getNumericValue(move.charAt(3))]=
+                    chessBoard[Character.getNumericValue(move.charAt(0))][Character.getNumericValue(move.charAt(1))];
+            chessBoard[Character.getNumericValue(move.charAt(0))][Character.getNumericValue(move.charAt(1))]=" ";
+
+        }else{ //if pawn promotion
+            chessBoard[1][Character.getNumericValue(move.charAt(0))]=" ";
+            chessBoard[0][Character.getNumericValue(move.charAt(1))]=String.valueOf(move.charAt(3));
+
+        }
+
+    }
+    public static void undoMove(String move){
 
     }
     public static String possibleMoves(){
@@ -101,17 +132,17 @@ public class Main {
             }
             catch(Exception e){
 
-            } try{//Move1up
-                if(" ".equals(chessBoard[r-1][c+j]) && i >= 16 ) {
-                    oldPiece=chessBoard[r-1][c+j];
+            }} try{//Move1up
+                if(" ".equals(chessBoard[r-1][c]) && i >= 16 ) {
+                    oldPiece=chessBoard[r-1][c];
                     chessBoard[r][c] =" ";
-                    chessBoard[r-1][c+j] = "P";
+                    chessBoard[r-1][c] = "P";
                     if (kingSafe()) {
-                        list = list + r + c + (r-1) + (c+j) + oldPiece;
+                        list = list + r + c + (r-1) + c + oldPiece;
 
                     }
                     chessBoard[r][c]="P";
-                    chessBoard[r-1][c+j]=oldPiece;
+                    chessBoard[r-1][c]=oldPiece;
                 }
 
             }
@@ -137,9 +168,26 @@ public class Main {
             catch(Exception e){
 
             }
+            try{//Move2up
+                if(" ".equals(chessBoard[r-1][c]) && " ".equals(chessBoard[r-2][c]) && i>=48) {
+                    oldPiece=chessBoard[r-2][c];
+                    chessBoard[r][c] =" ";
+                    chessBoard[r-2][c] = "P";
+                    if (kingSafe()) {
+                        list = list + r + c + (r-2) + c + oldPiece;
+
+                    }
+                    chessBoard[r][c]="P";
+                    chessBoard[r-2][c]=oldPiece;
+                }
+
+            }
+            catch(Exception e){
+
+            }
 
 
-        }
+
 
         return list;
     }
