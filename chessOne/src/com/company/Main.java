@@ -5,6 +5,7 @@ import java.util.Arrays;
 public class Main {
 
     static int kingPositionC,kingPositionL;
+    static int globalDepth=4;
     static String chessBoard[][]={
         //x   0   1   2   3   4   5   6   7   //  y
             {"r","k","b","q","a","b","k","r"}, // 0
@@ -26,6 +27,7 @@ public class Main {
 
 
     public static void main(String[] args) {
+        Moves moves = new Moves();
         while(!"A".equals(chessBoard[kingPositionC/8][kingPositionC%8])){
             kingPositionC++;
         }
@@ -41,11 +43,11 @@ public class Main {
      */ //possibleMoves();
 
 
-        makeMove("7657 ");
+        moves.makeMove("7657 ",chessBoard);
         for(int i=0;i<8;i++){
             System.out.println(Arrays.toString(chessBoard[i]));
         }
-        makeMove("7776 ");
+        moves.makeMove("7776 ", chessBoard);
         System.out.println(possibleMoves());
 
         System.out.println(possibleMoves());
@@ -54,23 +56,37 @@ public class Main {
         }
 
     }
-    public static void makeMove(String move){
-        if(move.charAt(4)!='P'){
-            //x1,y1,x2,y2,capturedPiece
-            chessBoard[Character.getNumericValue(move.charAt(2))][Character.getNumericValue(move.charAt(3))]=
-                    chessBoard[Character.getNumericValue(move.charAt(0))][Character.getNumericValue(move.charAt(1))];
-            chessBoard[Character.getNumericValue(move.charAt(0))][Character.getNumericValue(move.charAt(1))]=" ";
-
-        }else{ //if pawn promotion
-            chessBoard[1][Character.getNumericValue(move.charAt(0))]=" ";
-            chessBoard[0][Character.getNumericValue(move.charAt(1))]=String.valueOf(move.charAt(3));
-
+    public static String alphaBeta(int depth, int beta, int alpha, String move, int player){
+        Moves moves = new Moves();
+        String list = possibleMoves();
+        if(depth== 0 || list.length() == 0){
+            return move+(rating()*(player *2-1));
         }
+        player=1-player; //either 1 or 0
+        for(int i =0; 1<list.length(); i++){
+            moves.makeMove(list.substring(i,i+5),chessBoard);
+            list.substring(i,i+5);
+            flipBoard();
+            String returnString=alphaBeta(depth-1, beta, alpha,  list.substring(i,i+5), player);
+            int value=Integer.valueOf(returnString.substring(5));
+            flipBoard();
+            moves.undoMove(list.substring(i,i+5),chessBoard);
+            if (player==0) {
+                if (value<=beta) {beta=value; if (depth==globalDepth) {move=returnString.substring(0,5);}}
+            } else {
+                if (value>alpha) {alpha=value; if (depth==globalDepth) {move=returnString.substring(0,5);}}
+            }
+            if (alpha>=beta) {
+                if (player==0) {return move+beta;} else {return move+alpha;}
+            }
+        }
+        if (player==0) {return move+beta;} else {return move+alpha;}
+    }
+    public static void flipBoard(){
+
 
     }
-    public static void undoMove(String move){
 
-    }
     public static String possibleMoves(){
         String list = "";
         for(int i=0;i<64;i++){
@@ -423,10 +439,14 @@ public class Main {
         //add castling
         return list;
     }
+    public static int rating(){
+        return 0;
+    }
     public static boolean kingSafe() {
         //bishop / queen
 
         int temp = 1;
+
 
 
         for (int i = -1; i <= 1; i += 2) {
