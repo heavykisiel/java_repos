@@ -1,6 +1,7 @@
 package com.company;
 import javax.swing.*;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Main {
 
@@ -41,7 +42,8 @@ public class Main {
         f.setSize(500,500);
         f.setVisible(true);
      */ //possibleMoves();
-
+        System.out.println(possibleMoves());
+        System.out.println(alphaBeta(globalDepth,1000000,-1000000,"",0));
 
         moves.makeMove("7657 ",chessBoard);
         for(int i=0;i<8;i++){
@@ -58,16 +60,21 @@ public class Main {
     }
     public static String alphaBeta(int depth, int beta, int alpha, String move, int player){
         Moves moves = new Moves();
-        String list = possibleMoves();
-        if(depth== 0 || list.length() == 0){
-            return move+(rating()*(player *2-1));
+        String list="1";
+        if (depth==0 || list.length()==0) {return move+(rating()*(player*2-1));}
+        list="";
+        System.out.print("How many moves are there: ");
+        Scanner sc=new Scanner(System.in);
+        int temp=sc.nextInt();
+        for (int i=0;i<temp;i++) {
+            list+="1111b";
         }
-        player=1-player; //either 1 or 0
-        for(int i =0; 1<list.length(); i++){
+        //sort later
+        player=1-player;//either 1 or 0
+        for (int i=0;i<list.length();i+=5) {
             moves.makeMove(list.substring(i,i+5),chessBoard);
-            list.substring(i,i+5);
             flipBoard();
-            String returnString=alphaBeta(depth-1, beta, alpha,  list.substring(i,i+5), player);
+            String returnString=alphaBeta(depth-1, beta, alpha, list.substring(i,i+5), player);
             int value=Integer.valueOf(returnString.substring(5));
             flipBoard();
             moves.undoMove(list.substring(i,i+5),chessBoard);
@@ -440,7 +447,9 @@ public class Main {
         return list;
     }
     public static int rating(){
-        return 0;
+        System.out.print("What is score: ");
+        Scanner sc = new Scanner(System.in);
+        return sc.nextInt();
     }
     public static boolean kingSafe() {
         //bishop / queen
