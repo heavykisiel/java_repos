@@ -1,53 +1,89 @@
 package com.company;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.*;
-public class MyFrame extends JFrame{
+
+import static java.lang.Thread.sleep;
+
+public class MyFrame extends JFrame  {
+
     MyPanel panel;
-    JTextField tf1;
-    JMenu menu, submenu, start;
-    JMenuItem i1, i2, i3, i4, i5, play;
+    JMenu  start;
+    JMenuBar mb;
+    JMenuItem i1, i2, i3, i4, i5, play, stopz;
     ImageIcon img = new ImageIcon("src/com/company/pen.png");
-    BufferedImage icon;
+    boolean tick = true;
+    Thread loop = new Thread(
+                        new Runnable() {
+        @Override
+        public void run() {
+            while (true) {
+                if (Thread.interrupted()) {
+                    break;
+                }
+                try {
+                    Main.paintPic(Main.frame);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                    repaint();
+                    Main.frame.removeAll();
+                    throw new RuntimeException(ex);
+
+                }
+
+            }
+        }
+    }
+                );
 
     MyFrame(){
 
 
-        this.setIconImage(img.getImage());
-        tf1 = new JTextField();
         panel = new MyPanel(); // doubling menu if added
-        JMenuBar mb = new JMenuBar();
+        mb = new JMenuBar();
+
+        this.setIconImage(img.getImage());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("DrawMachine");
-
-
-
+        this.setIconImage(img.getImage());
         start=new JMenu("Start");
-
         play=new JMenuItem("play");
-        // tf1.setBounds(350,20,80,30);
-       // tf1.setEditable(false);
-       // menu.add(i1); menu.add(i2); menu.add(i3);
-      //  submenu.add(i4); submenu.add(i5);
-      //  menu.add(submenu);
+        stopz=new JMenuItem("stop");
         start.add(play);
-       // mb.add(menu);
+        start.add(stopz);
         mb.add(start);
+        mb.add(stopz);
         mb.setBounds(40,40,40,100);
+        play.addActionListener(cbListener);
+        stopz.addActionListener(cbListener);
+
         this.setBounds(20,20,500,500);
         this.setJMenuBar(mb);
-        this.add(tf1);
+
         this.add(panel);
         this.pack();
         this.setLayout(null);
         this.setVisible(true);
         this.setResizable(false);
-
     }
     public MyPanel getPanel(){
         return this.panel;
     }
+
+
+    ActionListener cbListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e){
+            if (e.getSource() == play) {
+
+                loop.start();
+                System.out.println("bb");
+            }
+             if (e.getSource() == stopz) {
+                 loop.interrupt();
+                System.out.println("aa");
+            }
+        }
+    };
 }
