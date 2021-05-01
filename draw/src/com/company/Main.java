@@ -23,7 +23,7 @@ public class Main {
             }
             else{
                 frame.getPanel().repaint();
-                Thread.sleep(100);
+                //Thread.sleep(100); //gdy
             }
         }
         Thread.yield();
@@ -37,12 +37,12 @@ public class Main {
 
         while(true){
                 frame.getPanel().repaint();
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {
+           // try {
+           //     Thread.sleep(100);
+          //  } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt(); // Here!
-                throw new RuntimeException(ex);
-            }
+           //     throw new RuntimeException(ex);
+          //  }
 
         }
 

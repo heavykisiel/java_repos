@@ -1,4 +1,5 @@
 package com.company;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
@@ -10,7 +11,7 @@ public class MyFrame extends JFrame  {
     MyPanel panel;
     JMenu  start;
     JMenuBar mb;
-    JMenuItem i1, i2, i3, i4, i5, play, stopz;
+    JMenuItem i1, i2, i3, i4, i5, replay, options;
     ImageIcon img = new ImageIcon("src/com/company/pen.png");
     boolean tick = true;
     Thread loop = new Thread(
@@ -43,19 +44,19 @@ public class MyFrame extends JFrame  {
         mb = new JMenuBar();
 
         this.setIconImage(img.getImage());
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("DrawMachine");
         this.setIconImage(img.getImage());
-        start=new JMenu("Start");
-        play=new JMenuItem("play");
-        stopz=new JMenuItem("stop");
-        start.add(play);
-        start.add(stopz);
+        start=new JMenu("Replay");
+        replay=new JMenuItem("Replay");
+        options=new JMenuItem("options");
+        start.add(replay);
+        start.add(options);
         mb.add(start);
-        mb.add(stopz);
+        mb.add(options);
         mb.setBounds(40,40,40,100);
-        play.addActionListener(cbListener);
-        stopz.addActionListener(cbListener);
+        mb.setLayout(new FlowLayout());
+        replay.addActionListener(cbListener);
+        options.addActionListener(cbListener);
 
         this.setBounds(20,20,500,500);
         this.setJMenuBar(mb);
@@ -75,13 +76,16 @@ public class MyFrame extends JFrame  {
 
         @Override
         public void actionPerformed(ActionEvent e){
-            if (e.getSource() == play) {
+            if (e.getSource() == replay) {
 
                 loop.start();
+                getPanel().setBackground(Color.GRAY);
                 System.out.println("bb");
             }
-             if (e.getSource() == stopz) {
-                 loop.interrupt();
+            if (e.getSource() == options) {
+                MyOptions options = new MyOptions();
+               // options.setSize(400,350);
+               // options.setBackground(Color.green);
                 System.out.println("aa");
             }
         }
