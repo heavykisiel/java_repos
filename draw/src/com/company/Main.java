@@ -14,7 +14,7 @@ public class Main {
 
 
         frame = new MyFrame();
-
+/*
         ticko=true;
 
         while(true){
@@ -23,13 +23,13 @@ public class Main {
             }
             else{
                 frame.getPanel().repaint();
-                //Thread.sleep(100); //gdy
+
             }
         }
         Thread.yield();
-        frame.repaint();
+        frame.getPanel().repaint();
             System.out.println("e");
-
+*/
 
     }
     public static void paintPic(MyFrame frame) throws InterruptedException {

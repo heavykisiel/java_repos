@@ -6,16 +6,16 @@ import java.awt.*;
 public class MyPanel extends JPanel {
     public int x;
     public int y;
-    private int incX=1;
-    private int incY=3;
+    private int incX=1; // narazie niestety trzeba zmieniać ręcznie :/
+    private int incY=3; // tu też
     private int borderX =500;
     private int borderY =500;
-    public int zero =0;
+
     private int lenxS;
     private int lenyS;
     private int lenxD;
     private int lenyD;
-    public int algonum=1;
+    private int algonum=3; // tu też ręcznie
     /*
     algo1:
        - dla incX=1 i  incY=1 tworzy bardzo ciekawy i symetryczny wzór czerwno zielony, po czasie na czerwonej stronie postają wzory
@@ -69,7 +69,7 @@ public class MyPanel extends JPanel {
     }
     public void paint(Graphics g){
         //super.paint(g); //erase previous line if active
-        if(algonum==1) {
+        if(getAlgonum() ==1) {
 
 
             if (getLenxD() >= borderX) {
@@ -115,7 +115,7 @@ public class MyPanel extends JPanel {
                 g.setColor(Color.magenta);
                 g.drawLine(getLenxS(), getLenyS(), getLenxD(), getLenyD());
             }
-        } else if (algonum == 2) {
+        } else if (getAlgonum() == 2) {
             if (getLenxD() >= borderX) {
                 setLenxS(500);
                 setLenyS(getLenyD() - 20);
@@ -161,7 +161,7 @@ public class MyPanel extends JPanel {
                 g.drawLine(getLenxS(), getLenyS(), getLenxD(), getLenyD());
             }
 
-        }else if(algonum ==3){
+        }else if(getAlgonum() ==3){
             if(getLenxD() >= borderX){
                 setLenxS(500);
                 setLenyS(getLenyD() - 20);
@@ -251,5 +251,13 @@ public class MyPanel extends JPanel {
 
     public void setLenyD(int lenyD) {
         this.lenyD = lenyD;
+    }
+
+    public int getAlgonum() {
+        return algonum;
+    }
+
+    public void setAlgonum(int algonum) {
+        this.algonum = algonum;
     }
 }
